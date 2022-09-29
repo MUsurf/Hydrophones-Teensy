@@ -18,7 +18,7 @@
 #include <arm_math.h>
 #include <arm_const_structs.h>
 #include "firFilter.h"
-#include "constantInputs.h"
+#include <Wire.h>
 
 // Pin numbers to read from
 #define ADC_PIN_0       A0
@@ -71,6 +71,8 @@
 // Minimum value to print out. Does an okay job of detecting when a signal is present
 #define THRESHOLD       100
 
+// The I2C address that the Teensy responds to for requests from the Jetson
+#define TEENSY_I2C_ADDR     0x30
 
 // Window types. Google these if you have questions or want to add more.
 float32_t window[BUFF_SIZE];
@@ -99,9 +101,13 @@ arm_rfft_fast_instance_f32 f32_instance0, f32_instance1, f32_instance_rxy;
 elapsedMillis ledTimer;
 elapsedMillis printTimer;
 
+// Delay variable
+int8_t delaySamples;
+
 // Function prototypes
 void ProcessAnalogData(AnalogBufferDMA *pabdma0, AnalogBufferDMA *pabdma1);
 void setWindowFunction(uint8_t windowType);
+void i2cRequestEvent();
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -142,6 +148,11 @@ void setup() {
     arm_rfft_fast_init_f32(&f32_instance0, BUFF_SIZE);
     arm_rfft_fast_init_f32(&f32_instance1, BUFF_SIZE);
     arm_rfft_fast_init_f32(&f32_instance_rxy, BUFF_SIZE);
+
+
+    // I2C Device mode startup stuff
+    Wire.begin(TEENSY_I2C_ADDR);
+    Wire.onRequest(i2cRequestEvent);
 }
 
 
@@ -158,6 +169,11 @@ void loop() {
         digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
         ledTimer = 0;
     }
+}
+
+
+void i2cRequestEvent() {
+    Wire.write(delaySamples);
 }
 
 void copy_from_dma_buff_to_dsp_buff(volatile uint16_t *dmaBuff, volatile uint16_t *end_dmaBuff, float32_t *dspBuff, float32_t offset) {
@@ -354,6 +370,19 @@ void ProcessAnalogData(AnalogBufferDMA *pabdma0, AnalogBufferDMA *pabdma1) {
 
     //printBuffers(print, BUFF_SIZE, rxy);
 
+    uint32_t delay_long_u = 0;
+    float32_t valAtDelay = 0;
+    arm_max_f32(rxy_time_domain, BUFF_SIZE, &valAtDelay, &delay_long_u);
+    int32_t delay_long = delay_long_u - (BUFF_SIZE/2);
+    if (delay_long > 127) {
+        delaySamples = 127;
+    }
+    else if (delay_long < -128) {
+        delaySamples = -128;
+    }
+    else {
+        delaySamples = (int8_t)delay_long;
+    }
 
     printCycles(cycleCounterStart, "Total Calculation Time");
 
