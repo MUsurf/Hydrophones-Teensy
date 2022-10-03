@@ -18,7 +18,7 @@
 #include <arm_math.h>
 #include <arm_const_structs.h>
 #include "firFilter.h"
-#include <Wire.h>
+#include "i2c_driver_wire.h"
 
 // Pin numbers to read from
 #define ADC_PIN_0       A0
@@ -72,7 +72,7 @@
 #define THRESHOLD       100
 
 // The I2C address that the Teensy responds to for requests from the Jetson
-#define TEENSY_I2C_ADDR     0x30
+#define TEENSY_I2C_ADDR     0x69
 
 // Window types. Google these if you have questions or want to add more.
 float32_t window[BUFF_SIZE];
