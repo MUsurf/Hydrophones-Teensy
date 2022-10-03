@@ -72,7 +72,8 @@
 #define THRESHOLD       100
 
 // The I2C address that the Teensy responds to for requests from the Jetson
-#define TEENSY_I2C_ADDR     0x69
+#define TEENSY_I2C_ADDR         0x69
+#define I2C_DEVICE_MODE_PORT    Wire1
 
 // Window types. Google these if you have questions or want to add more.
 float32_t window[BUFF_SIZE];
@@ -151,8 +152,8 @@ void setup() {
 
 
     // I2C Device mode startup stuff
-    Wire.begin(TEENSY_I2C_ADDR);
-    Wire.onRequest(i2cRequestEvent);
+    I2C_DEVICE_MODE_PORT.begin(TEENSY_I2C_ADDR);
+    I2C_DEVICE_MODE_PORT.onRequest(i2cRequestEvent);
 }
 
 
@@ -173,7 +174,7 @@ void loop() {
 
 
 void i2cRequestEvent() {
-    Wire.write(delaySamples);
+    I2C_DEVICE_MODE_PORT.write(delaySamples);
 }
 
 void copy_from_dma_buff_to_dsp_buff(volatile uint16_t *dmaBuff, volatile uint16_t *end_dmaBuff, float32_t *dspBuff, float32_t offset) {
