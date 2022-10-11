@@ -19,3 +19,11 @@ Mizzou SURF's hydrophone code that runs on the Teensy 4.1 microcontroller
 6. Boot the Jetson (if not already). The Teensy should start to flash an orange LED every second to indicate it is on
 7. From the Jetson, check if the Teensy is detected. It should show up on I2C address 0x69
 8. Assuming all goes well, you should be able to read an 8-bit signed integer from the Teensy which indicates the delay value
+
+### Teensy 4.1 Pinout
+![Teensy 4.1 Pinout](https://hackaday.com/wp-content/uploads/2020/05/teensy-4.1-pinout.png)
+
+
+### Jetson Seeed Studio A203 Board W8 Pinout
+See table "40PIN (W8)" for the Jetson GPIO pinout header
+[Jetson Seeed Studio A203 Board Pinout](https://files.seeedstudio.com/products/103110043/A203%20V2%20pin%20description.pdf)
