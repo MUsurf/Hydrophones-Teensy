@@ -1,0 +1,55 @@
+#include <Arduino.h>
+#include <SPI.h>
+
+const int chipSelectPin = 0;
+
+void setup() 
+{
+  //set chipselectpin as an output
+  pinMode(chipSelectPin, OUTPUT);
+  //initialize SPI
+  SPI1.begin();
+
+}
+
+void loop() 
+{
+  //change the resistance on thsi channel from min to max
+  
+  //testing stuff; not important
+  /*for (int level = 0; level < 255; level++)
+  {
+    digitalWriteFast(chipSelectPin, LOW);
+    delay(10);
+    SPI1.transfer(0b00000100);
+    delay(10);
+    digitalWriteFast(chipSelectPin, HIGH);
+    delay(50);
+  }
+  for (int level = 255; level > 0; level--)
+  {
+    digitalWriteFast(chipSelectPin, LOW);
+    delay(10);
+    SPI1.transfer(0b00001000);
+    delay(10);
+    digitalWriteFast(chipSelectPin, HIGH);
+    delay(50);
+  }*/
+
+  digitalWriteFast(chipSelectPin, LOW);
+  delay(10);
+  SPI1.transfer(0);
+  SPI1.transfer(255);
+  delay(10);
+  digitalWriteFast(chipSelectPin, HIGH);
+  delay(500); 
+
+  digitalWriteFast(chipSelectPin, LOW);
+  delay(10);
+  SPI1.transfer(0);
+  SPI1.transfer(0);
+  delay(10);
+  digitalWriteFast(chipSelectPin, HIGH);
+  delay(500);
+
+}
