@@ -16,6 +16,7 @@
 #include <Arduino.h>
 #include "dspFunctions.h"
 #include "i2c_driver_wire.h"
+#include "digitalPot.h"
 
 
 // The I2C address that the Teensy responds to for requests from the Jetson
@@ -42,6 +43,8 @@ void setup() {
     Serial.begin(115200);
 
     initADC();
+
+    digitalPotInit();
 
     setWindowFunction(HAMMING);
 
