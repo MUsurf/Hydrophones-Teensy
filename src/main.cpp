@@ -15,32 +15,24 @@
 
 #include <Arduino.h>
 #include "dspFunctions.h"
-#include "i2c_driver_wire.h"
 #include "digitalPot.h"
 
-
-// The I2C address that the Teensy responds to for requests from the Jetson
-#define TEENSY_I2C_ADDR         0x69
-#define I2C_DEVICE_MODE_PORT    Wire1
+// hardware serial port for talking to computer
+// https://www.pjrc.com/teensy/td_uart.html
+#define computerSerial Serial1
 
 // Some various timers
 elapsedMillis ledTimer;
-elapsedMillis printTimer;
 
 // Delay variable
 int8_t delaySamples;
-
-
-void i2cRequestEvent() {
-    I2C_DEVICE_MODE_PORT.write(delaySamples);
-}
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(ADC_PIN_0, INPUT);
     pinMode(ADC_PIN_1, INPUT);
 
-    Serial.begin(115200);
+    computerSerial.begin(9600);
 
     initADC();
 
@@ -56,24 +48,18 @@ void setup() {
     arm_rfft_fast_init_f32(&f32_instance0, BUFF_SIZE);
     arm_rfft_fast_init_f32(&f32_instance1, BUFF_SIZE);
     arm_rfft_fast_init_f32(&f32_instance_rxy, BUFF_SIZE);
-
-
-    // I2C Device mode startup stuff
-    I2C_DEVICE_MODE_PORT.begin(TEENSY_I2C_ADDR);
-    I2C_DEVICE_MODE_PORT.onRequest(i2cRequestEvent);
 }
 
 
 void loop() {
-
-    if ( /*printTimer >= 1000 &&*/ abdma1.interrupted() && (abdma2.interrupted())) {
+    if (abdma1.interrupted() && (abdma2.interrupted())) {
         ProcessAnalogData(&abdma1, &abdma2,  &delaySamples);
-        printTimer = 0;
+	computerSerial.println(delaySamples);
     }
- 
 
     if(ledTimer >= 1000) { // heartbeat led
         digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN));
         ledTimer = 0;
     }
 }
+// -- written in vim
