@@ -73,6 +73,9 @@ MAX11057::~MAX11057() {
 }
 
 inline void MAX11057::writeConfigRegister(bool reference, bool data_fmt_, bool convst_mode_) {
+    // Note: Timing diagram for this: datasheet Fig. 4 (pg 18).
+    // Corresponding minimum timings at end of Electrical Characteristics table (pg. 5)
+    // Timings for this function are probably small enough that delays are not required in this function
     data_fmt = data_fmt_;
     convst_mode = convst_mode_;
     
