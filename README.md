@@ -1,5 +1,9 @@
-# Hydrophones-Teensy
-Mizzou SURF's hydrophone code that runs on the Teensy 4.1 microcontroller
+# 2025-Hydrophone
+The early 2025 codebase for getting location information of the sub from hydrophones. Nikola and Alec from Electrical are our liasons for better information.
+
+## Notes
+- Notes from Harry from Nikola's explanation are at
+    - [Harry Notes](./harry-notes.md)
 
 ## Flashing Code onto the Teensy
 1. Donwload and install vscode and the PlatformIO Extension for vscode
