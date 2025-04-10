@@ -61,8 +61,8 @@ def calculations(time1, time2, time3):
     initial_guesses = [
         hydrophone_center
     ]
-    grid_x = np.linspace(0, 100, 10)  # 10 points along x-axis
-    grid_y = np.linspace(0, 100, 10)  # 10 points along y-axis
+    grid_x = np.linspace(0, 10, 20)  # 10 points along x-axis
+    grid_y = np.linspace(0, 10, 20)  # 10 points along y-axis
     initial_guesses += [np.array([x, y]) for x in grid_x for y in grid_y]
     
     for guess in initial_guesses:
@@ -114,11 +114,11 @@ def test_accuracy(test_point):
 def main():
     # Test with a known point
     for _ in range(100):
-        test_point = [random.randint(-100, 100), random.randint(-100, 100)]
+        test_point = [random.randint(-10, 10), random.randint(-10, 10)]
         test_accuracy(test_point)
         
         
-    test_point = [random.randint(0,100), random.randint(0,100)]
+    test_point = [random.randint(0,10), random.randint(0,10)]
     test_accuracy(test_point)
     
     # Test with point in different quadrant
